@@ -80,8 +80,7 @@ El primer paso consiste en crear nuestra jerarquía de certificación con una so
 Este paso consiste en generar un par de claves. La clave privada se almacenará en un archivo protegido por contraseña (*ca_key.pem*), mientras que la clave pública (junto con la información que queremos que contenga el certificado) se almacenará en el archivo de solicitud de certificado (*ca_cert-req.pem*).
 
 ```
-openssl req -new -extensions v3_ca -keyout ssl.key/ca_key.pem \
-  -out ssl.csr/ca_cert-req.pem
+openssl req -new -extensions v3_ca -keyout ssl.key/ca_key.pem -out ssl.csr/ca_cert-req.pem
 ```
 
 Para la generación de estos archivos, se le solicitará que indique una contraseña (dos veces por seguridad) y los diferentes atributos del certificado, por ejemplo, País, Estado, Nombre de la organización, Nombre común, etc. Como se comentó anteriormente, sugerimos utilizar la Passphrase *repollo*. En cuanto a los atributos, vamos a utilizar únicamente los valores indicados en la para la CA, es decir, Nombre de la organización, Nombre común y dirección de correo electrónico. Los atributos restantes no se especificarán: cuando se solicite, deberá ingresar un punto ".", que indica un atributo vacío.
@@ -91,8 +90,7 @@ Puede comprobar el contenido de los dos archivos: uno que contiene la clave priv
 El siguiente paso es analizar la solicitud de certificado utilizando la utilidad asn1parse de openssl:
 
 ```
-openssl asn1parse -i -dump -in ssl.csr/ca_cert-req.pem \
-  ssl.csr/ca_cert-req.txt
+openssl asn1parse -i -dump -in ssl.csr/ca_cert-req.pem ssl.csr/ca_cert-req.txt
 ```
 
 Puedes consultar el nuevo archivo de texto e identificar los campos que contienen la información proporcionada cuando se generó la solicitud y la clave pública.
@@ -102,15 +100,13 @@ Puedes consultar el nuevo archivo de texto e identificar los campos que contiene
 Este paso consiste en generar el certificado autofirmado de la CA:
 
 ```
-openssl req -new -x509 -in ssl.csr/ca_cert-req.pem \
-  -out ssl.crt/ca_cert.crt -days 365 -key ssl.key/ca_key.pem
+openssl req -new -x509 -in ssl.csr/ca_cert-req.pem -out ssl.crt/ca_cert.crt -days 365 -key ssl.key/ca_key.pem
 ```
 
 Debes utilizar la contraseña establecida en el paso anterior. Puedes analizar el nuevo certificado e identificar los campos que contienen la información introducida y la clave pública usando:
 
 ```
-openssl asn1parse -i -dump -in ssl.crt/ca_cert.crt \
-  ssl.crt/ca_cert.txt
+openssl asn1parse -i -dump -in ssl.crt/ca_cert.crt ssl.crt/ca_cert.txt
 ```
 
 Una vez configurada la CA, podemos pasar a la configuración del
@@ -154,8 +150,7 @@ keyUsage = nonRepudiation, digitalSignature, keyEncipherment
 Ahora se emitirá la solicitud de certificado para el servidor:
 
 ```
-openssl req -new -extensions v3_req -keyout ssl.key/server_key.pem \
-  -out ssl.csr/server_cert-req.pem -config server_cert.cnf
+openssl req -new -extensions v3_req -keyout ssl.key/server_key.pem -out ssl.csr/server_cert-req.pem -config server_cert.cnf
 ```
 Para este certificado, debe usar la opción `-extensions v3_req` y no `v3_ca` utilizada antes para la CA. Openssl proporciona un conjunto de perfiles de certificado descritos en su archivo de configuración openssl.cnf. En este caso, utilizamos el perfil de una entidad que no es una CA.
 
@@ -174,10 +169,7 @@ openssl req -in ssl.csr/server_cert-req.pem -text -verify
 Ahora este certificado no está autofirmado: lo debe firmar la CA. Por tanto, el siguiente comando genera el certificado de servidor firmado por la CA con una duración de 1 año. La CA firmará este certificado con su *“Passphrase”*:
 
 ```
-openssl x509 -req -in ssl.csr/server_cert-req.pem \
-  -out ssl.crt/server_cert.crt -days 365 -CA ssl.crt/ca_cert.crt \
-  -CAkey ssl.key/ca_key.pem -CAcreateserial -extfile server_cert.cnf \
-  -extensions req_ext
+openssl x509 -req -in ssl.csr/server_cert-req.pem -out ssl.crt/server_cert.crt -days 365 -CA ssl.crt/ca_cert.crt -CAkey ssl.key/ca_key.pem -CAcreateserial -extfile server_cert.cnf -extensions req_ext
 ```
 
 **Advertencia:** Las extensiones en los certificados no se transfieren a las solicitudes de certificados y viceversa. Debido a esto, las extensiones que agregamos en nuestro CSR no se transfirieron por defecto al certificado. Por lo tanto, estas extensiones deben agregarse explícitamente al certificado.
@@ -185,8 +177,7 @@ openssl x509 -req -in ssl.csr/server_cert-req.pem \
 Puedes analizar el nuevo certificado para comprobar que la información es correcta:
 
 ```
-openssl asn1parse -i -dump -in \
-  ssl.crt/server_cert.crt > ssl.crt/server_cert.txt
+openssl asn1parse -i -dump -in ssl.crt/server_cert.crt > ssl.crt/server_cert.txt
 ```
 
 Podemos verificar que el certificado esté bien formado usando el
@@ -201,7 +192,7 @@ Verifica que la configuración que especificamos esté configurada correctamente
 ```
 openssl x509 -in ssl.crt/server_cert.crt -text | grep -A1 Subject
 
-  Subject: O = CA SI-FIB, CN = localhost, emailAddress = xxx@upc.edu**
+  Subject: O = CA SmartCity, CN = localhost, emailAddress = xxx@upc.edu**
     Subject Public Key Info:
 
     Public Key Algorithm: rsaEncryption
@@ -217,8 +208,7 @@ openssl x509 -in ssl.crt/server_cert.crt -text | grep -A1 Subject
 En este paso generaremos el certificado para que el usuario (indicado como cliente) sea correctamente autenticado por el servidor web. El proceso es similar al que ya hicimos para el certificado del servidor web.
 
 ```
-openssl req -new -extensions v3_req -keyout ssl.key/client_key.pem \
-  -out ssl.csr/client_cert-req.pem
+openssl req -new -extensions v3_req -keyout ssl.key/client_key.pem -out ssl.csr/client_cert-req.pem
 ```
 
 Una vez emitida la solicitud, puedes verificar si está bien formada usando el comando:
@@ -232,9 +222,7 @@ openssl req -in ssl.csr/client_cert-req.pem -text -verify
 Como ya hicimos con el servidor, ahora necesitamos la firma de la CA para el certificado del cliente.
 
 ```
-openssl x509 -req -in ssl.csr/client_cert-req.pem \
-  -out ssl.crt/client_cert.crt -days 365 -CA ssl.crt/ca_cert.crt \
-  -CAkey ssl.key/ca_key.pem -CAcreateserial
+openssl x509 -req -in ssl.csr/client_cert-req.pem -out ssl.crt/client_cert.crt -days 365 -CA ssl.crt/ca_cert.crt -CAkey ssl.key/ca_key.pem -CAcreateserial
 ```
 
 También puede analizar el certificado para verificar los diferentes campos y verificar su corrección, como ya hizo para el servidor (aquí se omiten comandos específicos).
@@ -244,8 +232,7 @@ También puede analizar el certificado para verificar los diferentes campos y ve
 Este paso consiste en exportar el certificado de usuario, para luego importarlo en el navegador. El siguiente comando crea un único archivo que sigue el PKCS#12 y estará protegido por una contraseña.
 
 ```
-openssl pkcs12 -export -in ssl.crt/client_cert.crt \
-  -inkey ssl.key/client_key.pem -out client_cert.p12 -name "clientCert"
+openssl pkcs12 -export -in ssl.crt/client_cert.crt -inkey ssl.key/client_key.pem -out client_cert.p12 -name "clientCert"
 ```
 
 **Advertencia:** Mantén este archivo .p12 seguro y no olvides la
