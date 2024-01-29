@@ -15,7 +15,9 @@ Vagrant.
 
 Para ello descargaremos Vagrant desde <https://www.vagrantup.com/>.
 
-Vagrant permite autoconfigurar la máquina, por lo que crearemos un directorio para el laboratorio y descargaremos el Vagrantfile desde: **TODO**
+Vagrant permite autoconfigurar la máquina, por lo que crearemos un directorio para el laboratorio y descargaremos el Vagrantfile desde:
+
+https://github.com/reneserral/smartcities-security/raw/main/lab-certificados/Vagrantfile
 
 Abriremos un terminal en este directorio y ejecutaremos:
 
