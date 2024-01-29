@@ -191,7 +191,9 @@ Verifica que la configuración que especificamos esté configurada correctamente
 
 ```
 openssl x509 -in ssl.crt/server_cert.crt -text | grep -A1 Subject
-
+```
+Que da como salida:
+```
   Subject: O = CA SmartCity, CN = localhost, emailAddress = xxx@upc.edu**
     Subject Public Key Info:
 
