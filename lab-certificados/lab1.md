@@ -67,7 +67,7 @@ mkdir -p $HOME/si/ssl.{key,csr,crt}
 
 La siguiente figura muestra un esquema de esta práctica. En particular, podemos ver las diferentes entidades involucradas y sus relaciones, así como los valores de los atributos que deben configurarse.
 
-:![Configuración de las diferentes entidades](img/config_entities.png)
+![Configuración de las diferentes entidades](img/config_entities.png)
 
 ### Creando la jerarquía de certificación
 
