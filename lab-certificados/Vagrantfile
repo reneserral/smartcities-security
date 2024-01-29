@@ -1,0 +1,43 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+require 'getoptlong'
+
+# Parse CLI arguments.
+opts = GetoptLong.new(
+  [ '--provider',     GetoptLong::OPTIONAL_ARGUMENT ],
+)
+
+provider='virtualbox'
+begin
+  opts.each do |opt, arg|
+    case opt
+      when '--provider'
+        provider=arg
+    end # case
+  end # each
+  rescue
+end
+
+Vagrant.configure("2") do |config|
+
+  config.vm.define :debianbookworm1, primary: true do |apache|
+    debianbookworm1.vm.provider :virtualbox do |vb|
+      vb.customize ["modifyvm", :id, "--memory", "1024", "--cpus", "1"]
+    end
+
+    debianbookworm1.vm.provider :libvirt do |lv|
+      lv.memory = 1024
+      lv.cpus = 1
+    end
+    debianbookworm1.vm.box = "debian/bookworm64"
+    debianbookworm1.vm.hostname = "apache"
+    debianbookworm1.vm.network :private_network, ip: "192.168.56.11"
+    debianbookworm1.vm.provision "shell", inline: <<-SHELL
+      apt update
+      apt upgrade -y
+      apt install -qy git systemd-timesyncd curl gnupg2 openssl apache2
+      SHELL
+  end
+
+end
