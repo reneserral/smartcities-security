@@ -10,10 +10,9 @@ Apache es un servidor HTTP de código abierto para sistemas operativos Unix y Wi
 
 ### Configurando la VM y Apache
 
-Para esta sesión utilizaremos una máquina virtual Debian usando
-Vagrant.
+Para esta sesión utilizaremos una máquina virtual Debian usando VirtualBox y Vagrant.
 
-Para ello descargaremos Vagrant desde <https://www.vagrantup.com/>.
+El primer paso a realizar es instalar VirtualBox desde: https://www.virtualbox.org/wiki/Downloads. Una vez instalado se debe procede a la instalación de Vagrant, para ello descargaremos lo descargaremos desde <https://www.vagrantup.com/>.
 
 Vagrant permite autoconfigurar la máquina, por lo que crearemos un directorio para el laboratorio y descargaremos el Vagrantfile desde:
 
