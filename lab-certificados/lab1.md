@@ -60,7 +60,7 @@ Finalmente, necesitamos crear una estructura de directorios para facilitar la ge
 Para crear el conjunto completo de directorios en la VM, utiliza el siguiente comando:
 
 ```
-mkdir -p $HOME/si/ssl.{key,csr,crt}
+mkdir -p $HOME/ssl.{key,csr,crt}
 ```
 
 ### Esquema
@@ -90,7 +90,7 @@ Puede comprobar el contenido de los dos archivos: uno que contiene la clave priv
 El siguiente paso es analizar la solicitud de certificado utilizando la utilidad asn1parse de openssl:
 
 ```
-openssl asn1parse -i -dump -in ssl.csr/ca_cert-req.pem ssl.csr/ca_cert-req.txt
+openssl asn1parse -i -dump -in ssl.csr/ca_cert-req.pem > ssl.csr/ca_cert-req.txt
 ```
 
 Puedes consultar el nuevo archivo de texto e identificar los campos que contienen la información proporcionada cuando se generó la solicitud y la clave pública.
@@ -106,7 +106,7 @@ openssl req -new -x509 -in ssl.csr/ca_cert-req.pem -out ssl.crt/ca_cert.crt -day
 Debes utilizar la contraseña establecida en el paso anterior. Puedes analizar el nuevo certificado e identificar los campos que contienen la información introducida y la clave pública usando:
 
 ```
-openssl asn1parse -i -dump -in ssl.crt/ca_cert.crt ssl.crt/ca_cert.txt
+openssl asn1parse -i -dump -in ssl.crt/ca_cert.crt > ssl.crt/ca_cert.txt
 ```
 
 Una vez configurada la CA, podemos pasar a la configuración del
