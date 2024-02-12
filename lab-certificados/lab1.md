@@ -116,7 +116,7 @@ servidor.
 El SAN (Subject Alternative name) es una extensión de X.509 que
 permite asociar varios valores a un certificado de seguridad. RFC-2818 (mayo de 2000) especifica los nombres alternativos del *"Subject"* como el método preferido para agregar nombres DNS a los certificados.
 
-En esta práctica de laboratorio, usaremos localhost/127.0.0.1 como nombre de dominio cuando naveguemos por nuestra página. Necesitamos configurar los valores SAN IP/DNS adecuados en consecuencia.
+En esta práctica de laboratorio, usaremos 192.168.56.11 como nombre de dominio cuando naveguemos por nuestra página.
 
 En primer lugar, necesitamos crear una configuración personalizada2 (*server_cert.cnf*) para que openssl proporcione los valores de *subjectAltName*:
 
@@ -138,8 +138,8 @@ emailAddress_max = 64
 subjectAltName = @alt_names
 
 [alt_names]
-IP.1 = 127.0.0.1
-DNS.1 = localhost
+IP.1 = 192.168.56.11
+DNS.1 = acme
 
 [v3_req]
 basicConstraints = CA:FALSE
@@ -193,7 +193,7 @@ openssl x509 -in ssl.crt/server_cert.crt -text | grep -A1 Subject
 ```
 Que da como salida:
 ```
-  Subject: O = CA SmartCity, CN = localhost, emailAddress = xxx@upc.edu**
+  Subject: O = CA SmartCity, CN = 192.168.56.11, emailAddress = xxx@upc.edu**
     Subject Public Key Info:
 
     Public Key Algorithm: rsaEncryption
@@ -201,7 +201,7 @@ Que da como salida:
   
   X509v3 Subject Alternative Name:
 
-  IP Address:127.0.0.1, DNS:localhost
+  IP Address:192.168.56.11
 ```
 
 #### Generando un certificado para el usuario
@@ -255,7 +255,7 @@ Ahora podemos importar el certificado de usuario. Haga clic en *Ver certificados
 sudo systemctl start apache2
 ```
 
-Necesitarás tener acceso de root para hacerlo. Luego inicia el navegador web y conéctate a localhost (o *http://127.0.0.1*). Si ves una página de presentación, significa que Apache está instalado correctamente.
+Necesitarás tener acceso de root para hacerlo. Luego inicia el navegador web y conéctate al servidor *http://192.168.56.11*). Si ves una página de presentación, significa que Apache está instalado correctamente.
 
 Para parar el servidor:
 
@@ -359,7 +359,7 @@ El siguiente paso habilita este nuevo sitio web en el servidor:
 sudo a2ensite default-ssl
 ```
 
-Ahora necesitas reiniciar Apache2 para recargar todos los cambios. Si no hay ningún error, se pedirá una contraseña para desbloquear la clave privada del servidor. Ahora puedes intentar conectarte al nuevo sitio web https://localhost mediante una conexión segura (asegúrate que sea HTTPS). Si la configuración es correcta, deberías poder ver la nueva página web. Puedes hacer clic en el ícono del candado justo en el lado izquierdo de la URL y verificar que la conexión sea segura (candado verde). Puedes hacer clic en la flecha derecha para ver los detalles de la conexión y verificar el nombre de la entidad que certifica la conexión. Pulsando en *Más información* podrás ver los detalles del certificado.
+Ahora necesitas reiniciar Apache2 para recargar todos los cambios. Si no hay ningún error, se pedirá una contraseña para desbloquear la clave privada del servidor. Ahora puedes intentar conectarte al nuevo sitio web https://192.168.56.11 mediante una conexión segura (asegúrate que sea HTTPS). Si la configuración es correcta, deberías poder ver la nueva página web. Puedes hacer clic en el ícono del candado justo en el lado izquierdo de la URL y verificar que la conexión sea segura (candado verde). Puedes hacer clic en la flecha derecha para ver los detalles de la conexión y verificar el nombre de la entidad que certifica la conexión. Pulsando en *Más información* podrás ver los detalles del certificado.
 
 **Advertencia:** Si ves una advertencia que dice que el nombre del servidor no es el que aparece en el certificado, puedes cambiar el archivo default-ssl para corregir el nombre del servidor en la variable *ServerName*.
 
@@ -394,4 +394,4 @@ Estas opciones significan que el servidor requiere un certificado del usuario y 
 
 3.  Reinicia el servidor nuevamente e intenta establecer una conexión segura con el directorio raíz y el directorio *privado*. Observa que el servidor solicita un certificado de cliente para el directorio *privado*.
 
-Ahora puedes intentar abrir la URL https://localhost/private en Firefox. Debería aparecer una *Solicitud de identificación de  uario* con los detalles del certificado de usuario. Si haces clic en Aceptar, verás que el servidor acepta al usuario y muestra la página web "privada".
+Ahora puedes intentar abrir la URL https://192.168.56.11/private en Firefox. Debería aparecer una *Solicitud de identificación de  uario* con los detalles del certificado de usuario. Si haces clic en Aceptar, verás que el servidor acepta al usuario y muestra la página web "privada".
