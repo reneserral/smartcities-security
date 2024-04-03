@@ -23,6 +23,23 @@ El entorno en el que se desarrollará este problema se divide en dos partes, la 
 
 Esta sección detalla la infraestructura general, para cada una de las diferentes funcionalidades se van a ofrecer los detalles más adelante.
 
+El objetivo final es diseñar la red para poder ofrecer el servicio requerido. Para ello el diseño debe considerar los siguientes puntos:
+- Mínima exposición de servicios al exterior
+- Protección en diversos niveles:
+- **Nivel de sensores**:
+  - Debe especificarse la tecnología física utilitzada para el acceso.
+    - Detallar qué mecanismos de seguridad ofrece este nivel para poder garantizar: privacidad, integridad y disponibilidad
+  - Qué mecanismos de protección van a usarse a nivel de red y transporte en caso de ser posible.
+  - Que protocolo de aplicación va a usarse para comunicar las métricas en cada uno de los casos
+
+- **Nivel de edge y de cómputo**:
+  - Como va a diseñarse la capa física y de enlace de datos de la red para poder minimizar los movimientos laterales y la expansión en el caso de una brecha en la seguridad del sistema
+  - Qué mecanismos a nivel de red van a proporcionar aislamiento y reducción de la superfície de ataque
+  - Como van a protegerse las aplicaciones en este nivel
+
+- **Nivel de cloud**:
+  - Que diferencia implica la securización de este nivel respecto al resto. Recuerda que en la nube no tenemos infraestructura física, la parte visible para los usuarios y operadores es toda virtual.
+
 ### Infraestructura
 La infraestructura de la ciudad va a instalarse inicialmente en cuatro niveles:
 - *Nivel de sensores*: se van a instalar en la ciudad al sitio físico donde se necesiten los datos o la actuación particular.
@@ -171,31 +188,5 @@ Se pide diseñar la red teniendo en cuenta las consideraciones explicadas anteri
 [//]: <> (- Detectores de humedad en el suelo)
 [//]: <> (- Previsión de las temperaturas y de las lluvias)
 
-## Tareas
-
-Diseñar la red para poder ofrecer el servicio requerido. Para ello el diseño debe considerar los siguientes puntos:
-- Mínima exposición de servicios al exterior
-- Protección en diversos niveles:
-- **Nivel de sensores**:
-  - Debe especificarse la tecnología física utilitzada para el acceso.
-    - Detallar qué mecanismos de seguridad ofrece este nivel para poder garantizar: privacidad, integridad y disponibilidad
-  - Qué mecanismos de protección van a usarse a nivel de red y transporte en caso de ser posible.
-  - Que protocolo de aplicación va a usarse para comunicar las métricas en cada uno de los casos
-
-- **Nivel de edge**:
-  - Como va a diseñarse la capa física y de enlace de datos de la red para poder minimizar los movimientos laterales y la expansión en el caso de una brecha en la seguridad del sistema
-  - Qué mecanismos a nivel de red van a proporcionar aislamiento y reducción de la superfície de ataque
-  - Como van a protegerse las aplicaciones en este nivel
-
-- **Nivel de cloud**:
-  - Que diferencia implica la securización de este nivel respecto al resto. Recuerda que en la nube no tenemos infraestructura física, la parte visible para los usuarios y operadores es toda virtual.
-
-En una segunda iteración se necesita mejorar la seguridad permitiendo la separación lógica de los recursos dependiendo de quien acceda a ellos, así la red tendrá principalmente cuatro tipos de actores diferentes:
-  - *Operadores de la infraestructura*: necesitan acceso a todos los recursos, tanto de red como de servicios para poder gestionarlos.
-  - *Operadores de los servicios*: no deben tener acceso a la infraestructura, pero deben poder acceder a las zonas privilegiadas de los servicios para poder configurarlos, añadir nuevos o quitarlos.
-  - *Usuarios registrados*: son usuarios con ciertos privilegios, no tienen acceso a la infraestructura pero tienen una cuenta de usuario con la que pueden realizar tareas básicas de gestión de partes de los servicios
-  - *Invitados*: Usuarios sin ningún tipo de privilegio, solo podrán consultar la información pública del sistema.
-**NOTA IMPORTANTE:** En este punto del curso para simplificar solo distinguiremos dos tipos de roles: **Operadores de la infraestructura**, y **otros usuarios**
-
-Dado que diversos sistemas comparten infraestructura, se pide también como podemos garantizar que cada sistema puede trabajar de forma aislada y autónoma del otro.
-
+## Juntando toda la infraestructura
+En una segunda iteración y para ahorrar recursos se nos pide de permitir que las tres infraestructuras puedan compartir recursos de forma inteligente, es por ello que se pide que se rediseñe la red para minimizar el coste y permitir dicha compartición, pero siempre garantizando la seguridad, ya que los gestores de cada una de las partes es diferente.
